@@ -1,5 +1,41 @@
 # Homelab NAS Project with Proxmox and TrueNAS SCALE
 
+## System Specifications
+
+**Host Server (Proxmox VE)**
+- CPU: Intel i9-9900K
+- RAM: 32 GB DDR4
+- Boot Drive: 1 × 500 GB SSD (Proxmox OS)
+- Storage Drives:
+  - 2 × 8 TB HDD (ZFS mirror for NAS storage)
+  - 2 × 2 TB HDD (planned for additional use, e.g. testing or secondary pool)
+- GPU: NVIDIA GTX 1070 Ti (not used for this project, possible for Jellyfin hardware transcoding later)
+- Network: 1 Gbit/s LAN
+
+**Virtual Machines**
+- **TrueNAS SCALE VM**
+  - CPU: 4 vCPUs (host-passthrough)
+  - RAM: 8–12 GB
+  - Storage: 2 × 8 TB raw disk passthrough (ZFS mirror pool `tank`)
+- **Windows 11 VM (test client)**
+  - CPU: 2 vCPUs
+  - RAM: 4 GB
+  - Purpose: verify SMB/NFS connectivity and NAS functionality
+
+**Operating System Versions**
+  - Proxmox VE 8.x
+  - TrueNAS SCALE 24.x
+  - Windows 11 Pro (for test-VM)
+
+
+
+
+>The two 2 TB HDDs are currently reserved for additional testing (e.g., creating a secondary pool or acting as a backup target). They are not part of the main ZFS mirror pool.
+
+>Power/UPS has been considered, and might be added later. 
+
+---
+
 ## Planning Phase
 
 ### Requirements
@@ -7,7 +43,8 @@
 - Redundancy (able to survive a single disk failure without data loss).  
 - Automatic photo backup from Android phone.  
 - Media server (Jellyfin) for movies and TV shows on the living room TV.  
-- Access to data from both physical PCs and VMs.  
+- Access to data from both physical PCs and VMs.
+- **Security/Backup requirement:** Data integrity checks (bitrot protection) and offsite backup considered essential for photos.  
 
 ### Alternatives Considered
 - **ZFS directly in Proxmox** with a lightweight Linux container sharing via Samba/NFS.  
@@ -66,7 +103,14 @@ Reasons:
 
 ### Snapshots
 - Configured snapshots on `tank/photos`.  
-- Test: deleted a file and rolled back snapshot → file successfully restored.  
+- **Snapshot schedule:**  
+  - Daily snapshots, kept for 30 days.  
+  - Weekly snapshots, kept for 12 weeks.  
+  - Monthly snapshots, kept for 12 months.  
+- Test: deleted a file and rolled back snapshot → file successfully restored.
+
+### Scrubs
+- **Scrub schedule:** Monthly scrubs scheduled on the `tank` pool to ensure data integrity and detect latent errors.  
 
 ### Performance
 - Ran `iperf3` between Windows PC and NAS → ~1 Gbit/s, as expected.  
@@ -80,13 +124,14 @@ Reasons:
 *(Insert simple diagram: Proxmox → TrueNAS VM → ZFS Mirror → SMB/Immich/Jellyfin)*  
 
 ### Features
-- 8 TB redundancy with ZFS mirror.  
-- Access via SMB/NFS for PCs and VMs.  
-- Automatic photo backup from Android via Immich.  
-- Jellyfin media server for movies/TV to the living room.  
-- ZFS snapshots and scrubs for data integrity.  
-- Optional cloud-sync backup for photos.  
-
+| Feature                        | Status   |
+|--------------------------------|----------|
+| 8 TB redundant ZFS mirror      | ✅ Active |
+| SMB/NFS access for PCs & VMs   | ✅ Active |
+| Automatic photo backup (Immich)| ✅ Active |
+| Media streaming (Jellyfin)     | ✅ Active |
+| ZFS snapshots & scrubs         | ✅ Active |
+| Cloud-sync backup              | 🔄 Planned |
 ---
 
 ## Reflection
