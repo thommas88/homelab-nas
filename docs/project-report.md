@@ -1,95 +1,95 @@
-# Homelab NAS-prosjekt med Proxmox og TrueNAS SCALE
+# Homelab NAS Project with Proxmox and TrueNAS SCALE
 
-## Planleggingsfasen
+## Planning Phase
 
-### Behov
-- Lagring av data og bilder på en trygg og robust måte.  
-- Redundans (tåle at én disk ryker uten datatap).  
-- Automatisk bildebackup fra Android-telefon.  
-- Mediaserver (Jellyfin) for filmer og TV-serier til stue-TV.  
-- Tilgang til data fra både fysiske PC-er og VMer.  
+### Requirements
+- Storage of data and photos in a safe and robust way.  
+- Redundancy (able to survive a single disk failure without data loss).  
+- Automatic photo backup from Android phone.  
+- Media server (Jellyfin) for movies and TV shows on the living room TV.  
+- Access to data from both physical PCs and VMs.  
 
-### Vurderte alternativer
-- **ZFS i Proxmox direkte** med en lett Linux-container som deler via Samba/NFS.  
-- **TrueNAS SCALE som VM** på Proxmox, med disker passthrough.  
-- **UnRAID** for fleksibilitet med én-og-én disk, men uten ekte bitrot-beskyttelse.  
+### Alternatives Considered
+- **ZFS directly in Proxmox** with a lightweight Linux container sharing via Samba/NFS.  
+- **TrueNAS SCALE as a VM** on Proxmox, with raw disk passthrough.  
+- **UnRAID** for flexibility with adding single disks, but without true bitrot protection.  
 
-### Valgt løsning
-Jeg valgte å kjøre **TrueNAS SCALE som en VM i Proxmox** med rå-disk passthrough.  
-Grunnene:  
-- TrueNAS gir et ferdig, robust GUI og mange innebygde tjenester (SMB, NFS, iSCSI, app-katalog).  
-- ZFS håndteres ett sted (i TrueNAS), som gjør systemet enklere å drifte.  
-- Godt å vise i portefølje → kombinasjon av hypervisor (Proxmox) og enterprise lagringsløsning (ZFS).  
+### Chosen Solution
+I decided to run **TrueNAS SCALE as a VM in Proxmox** with raw-disk passthrough.  
+Reasons:  
+- TrueNAS provides a robust GUI and many built-in services (SMB, NFS, iSCSI, app catalog).  
+- ZFS is managed in one place (within TrueNAS), making the system simpler to operate.  
+- Strong for portfolio purposes → combination of hypervisor (Proxmox) and enterprise storage solution (ZFS).  
 
 ---
 
-## Under oppsett
+## Setup Phase
 
-### Proxmox installasjon
-- Installerte Proxmox på egen systemdisk (SSD).  
-- Lot de to 8 TB HDD-ene stå urørte slik at de kunne gis rått til TrueNAS.  
+### Proxmox Installation
+- Installed Proxmox on a dedicated system disk (SSD).  
+- Left the two 8 TB HDDs untouched so they could be passed raw into TrueNAS.  
 
-*(Skjermbilde: Proxmox installasjon)*  
+*(Screenshot: Proxmox installation)*  
 
 ### TrueNAS VM
-- Opprettet VM med 8 GB RAM, CPU type `host`, VirtIO NIC.  
-- Diskene lagt til som passthrough via `/dev/disk/by-id/...`.  
+- Created VM with 8 GB RAM, CPU type `host`, VirtIO NIC.  
+- Disks added via passthrough using `/dev/disk/by-id/...`.  
 
-*(Skjermbilde: VM-innstillinger i Proxmox)*  
+*(Screenshot: VM settings in Proxmox)*  
 
 ### ZFS Pool
-- Opprettet ZFS-pool `tank` i TrueNAS som et mirror (RAID1) av de to 8 TB diskene.  
-- Resultat: 8 TB brukbar kapasitet med redundans.  
+- Created ZFS pool `tank` in TrueNAS as a mirror (RAID1) of the two 8 TB disks.  
+- Result: 8 TB usable capacity with redundancy.  
 
-*(Skjermbilde: ZFS mirror vdev i TrueNAS)*  
+*(Screenshot: ZFS mirror vdev in TrueNAS)*  
 
-### Nettverksdeling
-- Konfigurerte SMB-shares for tilgang fra Windows.  
-- Testet tilkobling fra en Windows-VM og en fysisk PC.  
+### Network Sharing
+- Configured SMB shares for access from Windows.  
+- Tested connection from a Windows VM and a physical PC.  
 
-*(Skjermbilde: Windows kobler til `\\truenas\share`)*  
+*(Screenshot: Windows connecting to `\\truenas\share`)*  
 
-### Apper
-- **Immich** for automatisk bildebackup fra Android → peker til `tank/photos`.  
-- **Jellyfin** for mediaserver → peker til `tank/media/movies` og `tank/media/tv`.  
+### Apps
+- **Immich** for automatic Android photo backup → pointing to `tank/photos`.  
+- **Jellyfin** as a media server → pointing to `tank/media/movies` and `tank/media/tv`.  
 
-*(Skjermbilde: Immich web-GUI + Jellyfin web-GUI)*  
+*(Screenshot: Immich web-GUI + Jellyfin web-GUI)*  
 
 ---
 
-## Testing og drift
+## Testing and Operation
 
-### Failover-test
-- Dro ut én disk fysisk under drift.  
-- ZFS markerte pool som `DEGRADED`, men alle data var tilgjengelige.  
-- Etter at disken ble satt inn igjen, rebuild startet automatisk.  
+### Failover Test
+- Physically disconnected one disk during operation.  
+- ZFS marked the pool as `DEGRADED`, but all data remained available.  
+- When the disk was reinserted, the rebuild started automatically.  
 
 ### Snapshots
-- Konfigurerte snapshots på `tank/photos`.  
-- Test: slettet en fil og rullet tilbake snapshot → fil gjenopprettet.  
+- Configured snapshots on `tank/photos`.  
+- Test: deleted a file and rolled back snapshot → file successfully restored.  
 
-### Ytelse
-- Kjørte `iperf3` mellom Windows-PC og NAS → ~1 Gbit/s, som forventet.  
-- Filkopieringstest (stor fil) → ~110 MB/s over SMB.  
-
----
-
-## Ferdig system
-
-### Arkitekturdiagram
-*(Legg inn et enkelt diagram: Proxmox → TrueNAS VM → ZFS Mirror → SMB/Immich/Jellyfin)*  
-
-### Funksjoner
-- 8 TB redundans med ZFS mirror.  
-- Tilgang via SMB/NFS for PC-er og VMer.  
-- Automatisk bildebackup fra Android via Immich.  
-- Jellyfin mediaserver for filmer/serier til TV.  
-- ZFS snapshots og scrubs for dataintegritet.  
-- Cloud-sync backup av bilder (valgfritt).  
+### Performance
+- Ran `iperf3` between Windows PC and NAS → ~1 Gbit/s, as expected.  
+- File copy test (large file) → ~110 MB/s over SMB.  
 
 ---
 
-## Refleksjon
-- Prosjektet ga erfaring med både hypervisor (Proxmox) og lagringsplattform (TrueNAS + ZFS).  
-- Jeg lærte om designvalg mellom fleksibilitet (UnRAID) og robusthet (ZFS).  
-- Oppsettet kan skaleres ved å legge til nye mirror-par for mer kapasitet.  
+## Final System
+
+### Architecture Diagram
+*(Insert simple diagram: Proxmox → TrueNAS VM → ZFS Mirror → SMB/Immich/Jellyfin)*  
+
+### Features
+- 8 TB redundancy with ZFS mirror.  
+- Access via SMB/NFS for PCs and VMs.  
+- Automatic photo backup from Android via Immich.  
+- Jellyfin media server for movies/TV to the living room.  
+- ZFS snapshots and scrubs for data integrity.  
+- Optional cloud-sync backup for photos.  
+
+---
+
+## Reflection
+- The project provided hands-on experience with both a hypervisor (Proxmox) and a storage platform (TrueNAS + ZFS).  
+- I learned about design trade-offs between flexibility (UnRAID) and robustness (ZFS).  
+- The setup can be scaled by adding new mirror pairs for increased capacity.  
