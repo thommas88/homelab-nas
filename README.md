@@ -1,47 +1,47 @@
 # Homelab NAS – Proxmox + ZFS + Samba
 
-## Oversikt
-Dette prosjektet er en del av min homelab, hvor jeg har satt opp en NAS-løsning basert på Proxmox og ZFS.  
-Målet er å bygge en stabil og fleksibel lagringsplattform som gir sikkerhet, redundans og en plattform for videre eksperimentering.
+## Overview
+This project is part of my homelab, where I set up a NAS solution based on Proxmox and ZFS.  
+The goal was to build a stable and flexible storage platform that provides redundancy, security, and a foundation for further experimentation.
 
-## Mål
-- Sikker lagring med diskredundans  
-- Tilgang fra flere enheter (Windows og Linux)  
-- Snapshots og enkel restore  
-- Image-backup av VM-er og containere  
-- Et stabilt fundament for videre prosjekter  
+## Goals
+- Reliable storage with disk redundancy  
+- Access from multiple devices (Windows and Linux)  
+- Snapshots and simple restore capability  
+- Image backup of VMs and containers  
+- A stable foundation for future projects  
 
-## Arkitektur
-**Maskinvare:** i9-9900K, 32GB RAM, 2×8TB HDD (NAS), 2×2TB HDD (foto-backup), 250GB SSD (OS/VM)  
+## Architecture
+**Hardware:** i9-9900K, 32GB RAM, 2×8TB HDD (NAS), 2×2TB HDD (photo backup), 250GB SSD (OS/VM)  
 
-**Programvare og tjenester:**  
-- Proxmox VE som hypervisor  
-- TrueNAS SCALE som NAS-VM (ZFS mirror pool)  
-- Samba for nettverksdeling  
-- Immich for foto-backup  
-- Jellyfin for media-streaming  
-- Proxmox Backup Server for image-backup  
-- Snapshots og scrubs med ZFS  
+**Software and services:**  
+- Proxmox VE as hypervisor  
+- TrueNAS SCALE as NAS VM (ZFS mirror pool)  
+- Samba for network file sharing  
+- Immich for automatic photo backup  
+- Jellyfin for media streaming  
+- Proxmox Backup Server for VM/container image backups  
+- ZFS snapshots and scrubs for data integrity  
 
-## Hva jeg lærte
-- Oppsett og administrasjon av ZFS mirrors i praksis  
-- Hvordan datasets og snapshots kan beskytte data  
-- Grunnleggende nettverksdeling med Samba  
-- Erfaring med selvhostede tjenester som Immich og Jellyfin  
-- Integrasjon av snapshots og image-backup i en helhetlig strategi  
+## What I Learned
+- Setting up and managing ZFS mirrors in practice  
+- Using datasets and snapshots to protect and organize data  
+- Basic Samba configuration for network sharing  
+- Experience running self-hosted services like Immich and Jellyfin  
+- Integrating snapshots and image backups into a complete backup strategy  
 
-## Videre arbeid
-- Fullføre offsite-backup (rclone med kryptering)  
-- Varsler i Grafana (Discord/Telegram/webhooks)  
-- Vurdere SSD/NVMe caching for bedre NAS-ytelse  
-
----
-
-## Om scope og vurderinger
-Jeg har vurdert flere enterprise-funksjoner (for eksempel full overvåkning med Prometheus/Grafana og avansert sikkerhetstiltak som VLAN-segmentering).  
-For en homelab i denne størrelsen ble dette vurdert som unødvendig komplekst, men er notert som mulige fremtidige utvidelser.  
+## Next Steps
+- Implement encrypted offsite backup with rclone  
+- Add alerts in Grafana (Discord/Telegram/webhooks)  
+- Evaluate SSD/NVMe caching for better NAS performance  
 
 ---
 
-Detaljert prosjektrapport finnes her:  
+## Scope and Considerations
+Several enterprise-level features were considered (for example full monitoring with Prometheus/Grafana and advanced network segmentation).  
+For a homelab of this size, these were judged as unnecessary complexity, but they remain possible future extensions.  
+
+---
+
+A detailed project report can be found here:  
 👉 [PROJECT_REPORT.md](./PROJECT_REPORT.md)
