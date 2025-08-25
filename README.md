@@ -1,49 +1,40 @@
 # Homelab NAS – Proxmox + ZFS + Samba
 
+## Oversikt
+Dette prosjektet er en del av min homelab, hvor jeg har satt opp en NAS-løsning basert på Proxmox og ZFS.  
+Målet er å bygge en stabil og fleksibel lagringsplattform som gir sikkerhet, redundans og en plattform for videre eksperimentering.
+
 ## Mål
-Sette opp en NAS-løsning i hjemmenettverket mitt som gir:
-- Sikker lagring (diskredundans).
-- Tilgang fra flere enheter (Windows, Linux).
-- Mulighet for snapshots og enkel restore.
-- Et stabilt fundament for videre prosjekter i homelaben.
+- Sikker lagring med diskredundans  
+- Tilgang fra flere enheter (Windows, Linux)  
+- Snapshots og enkel restore  
+- Image-backup av VM-er og containere  
+- Et stabilt fundament for videre prosjekter  
 
 ## Arkitektur
--  **Maskinvare:** i9-9900K, 32GB RAM, 2×8TB HDD (NAS), 2×2TB HDD (foto-backup), 250GB SSD (OS/VM).
-- **Hypervisor:** Proxmox VE.
-- **Lagring:** ZFS mirrors i to separate pools (`pool_nas`, `pool_photos`).
-- **Tjenester:** LXC med Samba (NAS), LXC med Immich (foto-backup).
-- **Backup:** ZFS snapshots ukentlig + offsite-kopi (planlagt med rclone).
+**Maskinvare:** i9-9900K, 32GB RAM, 2×8TB HDD (NAS), 2×2TB HDD (foto-backup), 250GB SSD (OS/VM)  
 
-
-## Implementasjon
-1. Opprettet ZFS pool `pool_nas` i Proxmox (mirror av 2×8TB).
-2. Laget egne datasets for ulike bruksområder:
-   - `share` (daglig bruk).
-   - `archives` (langtidslagring).
-   - `backups` (Proxmox-backuper, dump-filer).
-3. Opprettet en LXC-container (`nas-server`) basert på Debian.
-4. Installerte og konfigurerte **Samba**:
-   - Opprettet brukere og grupper.
-   - Delte ut `\\nas\share` med passende rettigheter.
-5. Testet tilgang fra Windows- og Linux-klienter.
-
-## Sikkerhet og drift
-- ZFS scrubs planlagt månedlig (sjekker dataintegritet).
-- ZFS snapshots ukentlig (rotasjon på 3 måneder).
-- Mail-varsler fra Proxmox ved diskfeil eller pool-feil.
-- Planlagt offsite-backup med `rclone` (til skylagring, kryptert).
-
-## Skjermbilder
-- Proxmox dashboard med ZFS pool.
-- Samba share tilgjengelig fra Windows Explorer.
-- Snapshot-plan i Proxmox.
+**Programvare og tjenester:**  
+- Proxmox VE som hypervisor  
+- ZFS med separate pools for NAS og foto-backup  
+- Samba for nettverksdeling  
+- Immich for foto-backup  
+- Proxmox Backup Server for image-backup  
+- Prometheus + Grafana for overvåkning  
 
 ## Hva jeg lærte
-- Hvordan sette opp og administrere ZFS mirrors i praksis.
-- Hvordan datasets og snapshots kan brukes til å organisere og beskytte data.
-- Grunnleggende Samba-konfigurasjon for deling over nettverk.
-- Viktigheten av å planlegge backup-strategi utover lokal redundans.
+- Oppsett og administrasjon av ZFS mirrors i praksis  
+- Hvordan datasets og snapshots kan brukes til organisering og databeskyttelse  
+- Grunnleggende Samba-konfigurasjon for deling i nettverk  
+- Integrasjon av image-backup og snapshots i en helhetlig strategi  
+- Overvåkning av ressurser og dataintegritet med Prometheus/Grafana  
+
+## Neste steg
+- Fullføre oppsett av offsite-backup med rclone (kryptert)  
+- Varsler i Grafana (Discord/Telegram/webhooks)  
+- Vurdere caching med SSD/NVMe for bedre NAS-ytelse  
 
 ---
-**Neste steg:** Integrere NAS-oppsettet med monitoring (Prometheus/Grafana) og sette opp automatisk offsite-backup.
 
+Detaljert prosjektrapport finnes her:  
+👉 [PROJECT_REPORT.md](./PROJECT_REPORT.md)
