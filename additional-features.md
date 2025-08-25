@@ -1,3 +1,6 @@
-Password manager?
-adguard?
-Grafana? monitoring
+#Future additions
+
+## Mål
+- Password manager?
+- adguard?
+- Grafana? monitoring
