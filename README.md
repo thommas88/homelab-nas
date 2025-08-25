@@ -6,7 +6,7 @@ Målet er å bygge en stabil og fleksibel lagringsplattform som gir sikkerhet, r
 
 ## Mål
 - Sikker lagring med diskredundans  
-- Tilgang fra flere enheter (Windows, Linux)  
+- Tilgang fra flere enheter (Windows og Linux)  
 - Snapshots og enkel restore  
 - Image-backup av VM-er og containere  
 - Et stabilt fundament for videre prosjekter  
@@ -16,23 +16,30 @@ Målet er å bygge en stabil og fleksibel lagringsplattform som gir sikkerhet, r
 
 **Programvare og tjenester:**  
 - Proxmox VE som hypervisor  
-- ZFS med separate pools for NAS og foto-backup  
+- TrueNAS SCALE som NAS-VM (ZFS mirror pool)  
 - Samba for nettverksdeling  
 - Immich for foto-backup  
+- Jellyfin for media-streaming  
 - Proxmox Backup Server for image-backup  
-- Prometheus + Grafana for overvåkning  
+- Snapshots og scrubs med ZFS  
 
 ## Hva jeg lærte
 - Oppsett og administrasjon av ZFS mirrors i praksis  
-- Hvordan datasets og snapshots kan brukes til organisering og databeskyttelse  
-- Grunnleggende Samba-konfigurasjon for deling i nettverk  
-- Integrasjon av image-backup og snapshots i en helhetlig strategi  
-- Overvåkning av ressurser og dataintegritet med Prometheus/Grafana  
+- Hvordan datasets og snapshots kan beskytte data  
+- Grunnleggende nettverksdeling med Samba  
+- Erfaring med selvhostede tjenester som Immich og Jellyfin  
+- Integrasjon av snapshots og image-backup i en helhetlig strategi  
 
-## Neste steg
-- Fullføre oppsett av offsite-backup med rclone (kryptert)  
+## Videre arbeid
+- Fullføre offsite-backup (rclone med kryptering)  
 - Varsler i Grafana (Discord/Telegram/webhooks)  
-- Vurdere caching med SSD/NVMe for bedre NAS-ytelse  
+- Vurdere SSD/NVMe caching for bedre NAS-ytelse  
+
+---
+
+## Om scope og vurderinger
+Jeg har vurdert flere enterprise-funksjoner (for eksempel full overvåkning med Prometheus/Grafana og avansert sikkerhetstiltak som VLAN-segmentering).  
+For en homelab i denne størrelsen ble dette vurdert som unødvendig komplekst, men er notert som mulige fremtidige utvidelser.  
 
 ---
 
