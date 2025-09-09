@@ -1,0 +1,62 @@
+# Project Timeline – Homelab NAS
+
+## 13.08.25 – First Installation of Proxmox
+- Installed Proxmox for the first time. No prior experience with Proxmox or Linux.  
+- **Goal:** Run a Satisfactory server on a Windows VM and share a few HDDs on the network.  
+✅ **Result:** Proxmox up and running on a machine with a 230 GB SSD as the OS disk.  
+💡 **Learning:** First exposure to hypervisor and VM management. Gained an overview of the GUI and basic concepts.  
+
+---
+
+## 23.08.25 – Planning the VM Structure
+- Explored Proxmox further and gained insight into possibilities.  
+- Planned VM setup:  
+  - TrueNAS VM for storage and backup  
+  - Immich VM to replace Google Photos  
+  - Windows VM with SteamCMD (host game servers) and other use cases  
+- After evaluating hardware, ordered 2 additional HDDs and a new case.  
+✅ **Result:** Clear plan for how to separate roles into dedicated VMs.  
+💡 **Learning:** Important to separate functions into their own VMs for flexibility and maintainability.  
+
+---
+
+## 29.08.25 – Hardware Upgrade
+- Upgraded case and storage capacity.  
+- Replaced old case (Corsair 4000D Airflow) with Fractal Define 7 due to limited HDD space.  
+- Added **2×8 TB Seagate IronWolf NAS HDDs** intended for TrueNAS.  
+- Assigned the **2×2 TB drives** to Immich (photo backups).  
+✅ **Result:** The machine now had space for more drives and improved cooling, ready for the NAS project.  
+💡 **Learning:** Physical space and cooling are critical in projects with many disks. Hardware planning is just as important as software setup.  
+
+---
+
+## 31.08.25 – TrueNAS and Windows VM
+- Created a TrueNAS VM in Proxmox (4 vCPU, 16 GB RAM, 32 GB system disk).  
+- Passed through the two new 8 TB drives → created a **ZFS Mirror pool** (~7.14 TiB usable).  
+- Created datasets: `Files`, `Photos`, `Videos`.  
+- Set up SMB shares and tested access from Windows with a new user.  
+- Created a **“daily” user with read-only rights** to avoid always using the admin account. This improves security by limiting potential damage if credentials are compromised.  
+- Changed from DHCP to **static IP (192.168.xx.xx)** and set a DHCP reservation in the router.  
+- Also created a Windows VM (no active use case yet).  
+✅ **Result:** NAS setup functional, shares accessible across devices on the network.  
+💡 **Learning:** Important to use datasets instead of sharing the pool root. Gained experience with ACL and permissions management in TrueNAS.  
+
+---
+
+## 01.09.25 – Immich and the 3 TB Disk
+- Set up an **Immich server** in a dedicated Ubuntu VM (Docker + Compose).  
+- Tested mobile photo uploads: worked successfully on local Wi-Fi (home router).  
+- Added a 3 TB disk (with existing data).  
+- Tried `zpool import` → no pool available.  
+- Conclusion: The disk had previously been used in a Windows VM, so it must be reattached there to access the data.  
+✅ **Result:** Immich online and syncing photos automatically from mobile.  
+💡 **Learning:** Learned about the limitations of ZFS import. Important to remember what system a disk was used in before—don’t try to force it into TrueNAS if it belongs in Windows.  
+
+---
+
+## 05.09.25 – Testing Reboot and Automation
+- Stopped all VMs and restarted the server to test automation.  
+- Found that Immich was not connected to the 2×2 TB ZFS pool, but instead used the default 70 GB system disk.  
+- Fixed the issue → ensured Immich now uses the correct ZFS mount.  
+✅ **Result:** After the fix, Immich works with the 2×2 TB pool, and data is stored in the correct place.  
+💡 **Learning:** Testing reboots is essential to confirm mounts persist. Learned that Docker/VMs can fall back to the system disk if mounts are not ready—must standardize mounts to avoid this.  
