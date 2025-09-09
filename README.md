@@ -23,6 +23,23 @@ The goal was to create a stable and flexible storage platform that provides reli
 - Proxmox Backup Server for VM/container image backups  
 - ZFS snapshots and scrubs for data integrity  
 
+## Repository Structure
+
+```
+homelab-nas/
+│
+├─ README.md              ← Main project overview (this file)
+├─ docs/
+│   ├─ timeline.md       ← Chronological project log (dates, milestones)
+│   ├─ config.md          ← Configuration examples (Proxmox VM, ZFS pool, SMB)
+│   └─ errors-fixes.md    ← Problems encountered and solutions
+└─ images/
+    ├─ truenas-pool.png   ← Screenshot: ZFS pool status
+    ├─ smb-shares.png     ← Screenshot: SMB share setup
+    └─ network-diagram.png← Architecture diagram
+```
+
+
 ## What I Learned
 - Hands-on experience setting up and managing ZFS mirrors 
 - Using datasets and snapshots for data organization and protection  
