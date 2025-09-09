@@ -134,7 +134,7 @@ By including these considerations, the project shows awareness of best practices
 | 8 TB redundant ZFS mirror      | ✅ Active |
 | SMB/NFS access for PCs & VMs   | ✅ Active |
 | Automatic photo backup (Immich)| ✅ Active |
-| Media streaming (Jellyfin)     | ✅ Active |
+| Media streaming (Jellyfin)     | 🔄 Planned |
 | ZFS snapshots & scrubs         | ✅ Active |
 | Cloud-sync backup              | 🔄 Planned |
 
