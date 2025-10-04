@@ -11,6 +11,9 @@ The goal was to create a stable and flexible storage platform that provides reli
 - Support image backups of VMs and containers
 - Serve as a stable foundation for additional services (e.g. Immich, Jellyfin) 
 
+## UML
+![Homelab Diagram](images/UML.png)
+
 ## Architecture
 **Hardware:** i9-9900K, 32GB RAM, 2×8TB HDD (NAS), 2×2TB HDD (photo backup), 250GB SSD (OS/VM)  
 
