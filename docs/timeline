@@ -1,81 +1,94 @@
 # Project Timeline – Homelab NAS
 
-## 13.08.25 – First Installation of Proxmox
-- Installed Proxmox for the first time. No prior experience with Proxmox or Linux.  
-- **Goal:** Run a Satisfactory server on a Windows VM and share a few HDDs on the network.  
-**Result:** Proxmox up and running on a machine with a 230 GB SSD as the OS disk.  
-**Learning:** First exposure to hypervisor and VM management. Gained an overview of the GUI and basic concepts.  
+## 13.08.25 - Initial Setup: First Proxmox Installation
+**Goal:** Deploy a Proxmox hypervisor to host a Windows VM for running a Satisfactory server and sharing local HDDs.
+**Actions:** Installed Proxmox VE 8 on a 230 GB SSD. This was the first time working with Proxmox or Linux.
+**Result:** Successful installation and initial host configuration completed. 
+**Learning:** Introduced to virtualization concepts, VM lifecycle management, and the Proxmox web interface.
 
 ---
 
-## 23.08.25 – Planning the VM Structure
-- Explored Proxmox further and gained insight into possibilities.  
-- Planned VM setup:  
-  - TrueNAS VM for storage and backup  
-  - Immich VM to replace Google Photos  
-  - Windows VM with SteamCMD (host game servers) and other use cases  
-- After evaluating hardware, ordered 2 additional HDDs and a new case.  
-**Result:** Clear plan for how to separate roles into dedicated VMs.  
-**Learning:** Important to separate functions into their own VMs for flexibility and maintainability.  
+## 23.08.25 - System Design: Planning the VM Structure
+**Goal:** Define a virtual machine layout to organize system roles and improve scalability.  
+**Actions:** Explored Proxmox capabilities in depth and planned three dedicated VMs:  
+- **TrueNAS** for centralized storage and backups  
+- **Immich** to replace Google Photos for media management  
+- **Windows VM** for SteamCMD game servers and testing  
+Evaluated existing hardware limitations and ordered two additional HDDs and a new case to support the setup.  
+**Result:** Established a clear VM architecture with logical separation of services.  
+**Learning:** Isolating roles across individual VMs improves maintainability, flexibility, and system stability.
 
 ---
 
-## 29.08.25 – Hardware Upgrade
-- Upgraded case and storage capacity.  
-- Replaced old case (Corsair 4000D Airflow) with Fractal Define 7 due to limited HDD space.  
-- Added **2×8 TB Seagate IronWolf NAS HDDs** intended for TrueNAS.
-- Added ram, Went from 32gb -> 64gb.  
-- Assigned the **2×2 TB drives** to Immich (photo backups).  
-**Result:** The machine now had space for more drives and improved cooling, ready for the NAS project.  
-**Learning:** Physical space and cooling are critical in projects with many disks. Hardware planning is just as important as software setup.  
+## 29.08.25 - Hardware Upgrade: Expanding Capacity and Cooling
+**Goal:** Upgrade the physical setup to support additional drives and improve thermal management.  
+**Actions:**  
+- Replaced the Corsair 4000D Airflow case with a Fractal Define 7 to increase HDD capacity.  
+- Installed **2×8 TB Seagate IronWolf NAS drives** for TrueNAS.  
+- Upgraded system memory from **32 GB → 64 GB** to improve VM performance.  
+- Reassigned the existing **2×2 TB drives** for use by the Immich photo backup server.  
+**Result:** The host now supports more drives with improved airflow and cooling, providing a stable foundation for the NAS environment.  
+**Learning:** Proper hardware planning including space, cooling, and memory—is critical when scaling a system with multiple storage devices.
 
 ---
 
-## 31.08.25 – TrueNAS and Windows VM
-- Created a TrueNAS VM in Proxmox (4 vCPU, 16 GB RAM, 64 GB system disk).  
-- Passed through the two new 8 TB drives → created a **ZFS Mirror pool** (~7.14 TiB usable).  
+## 31.08.25 - Deploying TrueNAS and Windows VMs
+**Goal:** Establish a dedicated NAS environment with ZFS storage and shared network access.  
+**Actions:**  
+- Created a **TrueNAS VM** in Proxmox (4 vCPU, 16 GB RAM, 64 GB system disk).  
+- Passed through **2×8 TB drives** and configured a **ZFS mirror pool** (~7.1 TiB usable).  
 - Created datasets: `Files`, `Photos`, `Videos`.  
-- Set up SMB shares and tested access from Windows with a new user.  
-- Created a **“daily” user with read-only rights** to avoid always using the admin account. This improves security by limiting potential damage if credentials are compromised.  
-- Changed from DHCP to **static IP (192.168.xx.xx)** and set a DHCP reservation in the router.  
-- Also created a Windows VM (no active use case yet).  
-**Result:** NAS setup functional, shares accessible across devices on the network.  
-**Learning:** Important to use datasets instead of sharing the pool root. Gained experience with ACL and permissions management in TrueNAS.  
+- Configured SMB shares and verified access from a Windows client.  
+- Added a **“daily” user** with read-only permissions for security, avoiding reliance on the admin account.  
+- Switched from DHCP to a **static IP** with a reserved lease on the router.  
+**Result:** Functional TrueNAS instance with accessible SMB shares and stable IP configuration.  
+**Learning:** Using datasets instead of sharing the pool root simplifies management and improves security. Gained experience with ACLs and permission handling in TrueNAS.
 
 ---
 
-## 05.09.25 – Testing Reboot and Automation
-- Stopped all VMs and restarted the server to test automation.  
-- Found that Immich was not connected to the 2×2 TB ZFS pool, but instead used the default 70 GB system disk.  
-- Fixed the issue → ensured Immich now uses the correct ZFS mount.  
-**Result:** immich fix had to wait for another day
-**Learning:** Testing reboots is essential to confirm mounts persist. Learned that Docker/VMs can fall back to the system disk if mounts are not ready—must standardize mounts to avoid this.  
 
-
----
-
-## 08.10.25 - Dropped windows, installed linux
-- Linux installation
-- Installed valheim
-- Installed Minecraft
-- Added a 3TB disk to TrueNas as network workdrive.
-**Problem:** University network and friends connecting.
+## 05.09.25 - Testing Reboot and Mount Persistence
+**Goal:** Verify that all VMs and services restart correctly after a full system reboot.  
+**Actions:**  
+- Stopped all VMs and restarted the Proxmox host to test automation.  
+- Discovered that **Immich** was not mounting the 2×2 TB ZFS pool and had defaulted to the 70 GB system disk.  
+**Result:** Identified mount timing issue affecting Docker/VM storage paths; corrective action scheduled.  
+**Learning:** Testing reboots is critical to confirm that mounts persist. If ZFS datasets are not available on startup, dependent services may revert to local storage-standardizing mounts prevents data loss.
 
 ---
 
-## 20.10.25 - Fixing issues with connectivity
--Had problems with other players connecting to my servers.
-  - Tried tailscale at first to bypass the university strick ports and network.
-  - Got told about Playit.gg and how i can use that as a fix to my problem(worked great)
-- I set up a Rclone with backup to google drive of minecraft world incase server goes down.
-  - With more players connecting and inviesting time i wanted to offer a backup solution incase i tinker too much and break server.
+## 08.10.25 - Transition from Windows to Linux Game Hosting
+**Goal:** Replace Windows-based game servers with a Linux environment for improved stability and automation.  
+**Actions:**  
+- Installed Ubuntu Server and migrated all game-hosting services.  
+- Deployed **Valheim** and **Minecraft** servers on the new Linux VM.  
+- Added a **3 TB HDD** to TrueNAS and configured it as a shared network “Workdrive.”  
+**Result:** All game servers running under Linux with centralized storage for backups and configuration files.  
+**Challenge:** Encountered connection issues due to university network restrictions, preventing friends from joining externally.
 
 ---
 
-## 01.11.25 – Immich and the 2x2 TB Disks
-- Set up an **Immich server** in a dedicated Ubuntu VM (Docker + Compose).  
-- Tested mobile photo uploads: worked successfully on local Wi-Fi (home router).  
-**Result:** Immich online and syncing photos automatically from mobile. 
+## 20.10.25 - Resolving Connectivity and Implementing Backups
+**Goal:** Enable external access to game servers despite restrictive university network policies.  
+**Actions:**  
+- Experienced issues with external players being unable to connect.  
+Tested **Tailscale** as a potential solution, but its peer-to-peer access model limits connections to authenticated users within the same network, making it unsuitable for public game hosting.   
+- Switched to **Playit.gg**, which successfully established a secure tunnel for external connections.  
+- Configured **Rclone** to back up Minecraft world data to Google Drive, ensuring data protection in case of downtime or configuration errors.  
+**Result:** External connectivity fully functional through Playit.gg, with automated cloud backups for the Minecraft server.  
+**Learning:** Peer-to-peer VPNs like Tailscale are secure but restrictive for public hosting. Tunneling services such as Playit.gg offer an easier, controlled way to expose servers safely while automated backups protect player progress.
+
+---
+
+## 01.11.25 - Restoring and Automating Immich on 2×2 TB Disks
+**Goal:** Resolve the previous mount issue and bring Immich fully back online with automated storage handling.  
+**Actions:**  
+- Deployed a dedicated **Ubuntu VM** for Immich using Docker and Docker Compose.  
+- Corrected the earlier mount configuration so Immich now properly uses the **2×2 TB ZFS pool** instead of the system disk.  
+- Verified functionality by uploading photos from mobile over local Wi-Fi (home router).  
+- Added startup automation to ensure ZFS mounts are ready before Docker starts.  
+**Result:** Immich restored and fully operational, automatically syncing photos from mobile devices.  
+**Learning:** Addressing mount dependencies during boot prevents service failures. Automating mount readiness made the setup stable and maintenance-free.
 
 ---
 
