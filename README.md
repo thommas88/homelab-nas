@@ -15,7 +15,7 @@ The goal was to create a stable and flexible storage platform that provides reli
 ![Homelab Diagram](images/UML.png)
 
 ## Architecture
-**Hardware:** i9-9900K, 32GB RAM, 2×8TB HDD (NAS), 2×2TB HDD (photo backup), 250GB SSD (OS/VM)  
+**Hardware:** i9-9900K, 64GB RAM, 2×8TB HDD (NAS), 2×2TB HDD (photo backup), 250GB SSD (OS/VM)  
 
 **Software and services:**  
 - Proxmox VE as hypervisor  
@@ -65,3 +65,9 @@ These remain possible extensions for future iterations.
 
 A detailed project report can be found here:  
 👉 [PROJECT_REPORT.md](./PROJECT_REPORT.md)
+
+## ohh, and 
+I bought this little thing to try networking or perhaps as offsite backup. Anything can happen. 
+![EliteDesk](images/Elitedeskg5.jpeg)
+
+
