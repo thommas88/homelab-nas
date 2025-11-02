@@ -1,0 +1,36 @@
+## Roadmap
+
+This roadmap outlines current and planned improvements to the homelab environment, focusing on stability, automation, and service expansion.
+
+###  Phase 1 - Core Infrastructure (Completed)
+- [x] Deploy Proxmox VE 8.x as hypervisor (`proxmox01`)
+- [x] Set up TrueNAS SCALE VM with ZFS mirrors (2×8 TB + 2×2 TB)
+- [x] Configure SMB/NFS shares for NAS access
+- [x] Create Linux VM for Docker containers (`docker01`)
+- [x] Deploy Pi-hole container for DNS filtering (`pihole01`)
+- [x] Deploy Immich container for automated photo backup (`immich01`)
+- [x] Implement offsite Rclone backup for Minecraft server
+
+###  Phase 2 - Monitoring, Security, and Optimization (In Progress)
+- [ ] Install and configure **Netdata** for live system monitoring  
+- [ ] Deploy **Bitwarden** for secure credential management  
+- [ ] Test **Syncthing** for cross-device file synchronization  
+- [ ] Enable **Portainer** for easier Docker management  
+- [ ] Evaluate **Tailscale** or **WireGuard** for secure remote access  
+- [ ] Set up **Grafana + Prometheus** dashboard for host metrics  
+- [ ] Automate snapshots and vzdump VM backups to TrueNAS  
+
+###  Phase 3 - Service Expansion (Planned)
+- [ ] Deploy **Nextcloud** for document storage and collaboration  
+- [ ] Deploy **Jellyfin** for media streaming  
+- [ ] Integrate **Bitwarden**, **Nextcloud**, and **Immich** with single sign-on (SSO)  
+- [ ] Add **UPS integration** for power monitoring and automatic shutdown  
+- [ ] Set up **offsite backup node** (HP EliteDesk G5) with rclone sync  
+- [ ] Configure alerting via Discord or Telegram webhooks  
+
+###  Long-Term Improvements (Future Goals)
+- [ ] Move select containers to LXC for resource efficiency  
+- [ ] Implement redundant storage replication between TrueNAS pools  
+- [ ] Test SSD caching for NAS performance optimization  
+- [ ] Explore Kubernetes or Docker Swarm orchestration  
+- [ ] Create unified dashboard for all homelab metrics  
