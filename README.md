@@ -1,7 +1,7 @@
 # Homelab NAS – Proxmox + ZFS + Samba
 
 ## Overview
-This project implements a high-availability NAS environment inside a Proxmox homelab. The goal was to design a storage backbone that’s fault-tolerant, simple to maintain, and scalable for self-hosted services like Immich and Jellyfin. The setup emphasizes practical automation, data safety, and reproducible documentation.
+This project implements reliable single-node NAS environment inside a Proxmox homelab. The goal was to design a storage backbone that’s fault-tolerant, simple to maintain, and scalable for self-hosted services like Immich and Jellyfin. The setup emphasizes practical automation, data safety, and reproducible documentation.
 
 ## Purpose 
 This project series began as a way to repurpose my old hardware into something practical, a NAS and game server environment for me, friends and my fellow students.
@@ -16,7 +16,7 @@ As the system grew, I transitioned fully to Linux for stability and scalability,
 - Serve as a stable foundation for additional services (e.g. Immich, Jellyfin) 
 
 ## UML
-![Homelab Diagram](images/UML.png)
+![Architecture diagram](images/UML.png)
 
 ## Architecture
 **Hardware:** 
@@ -32,17 +32,11 @@ As the system grew, I transitioned fully to Linux for stability and scalability,
 |-----------|------|----|-----|-----|------|------------|
 | `proxmox01` | Hypervisor | Proxmox VE 8.x | i9-9900K | 64 GB | 2 TB SSD | Mainserver |
 | `truenas01` | NAS / files | TrueNAS SCALE | 4 vCPU | 16 GB | 2x8TB, 2x2TB ZFS | SMB, NFS, Backups |
-| `docker01` | VM | Ubuntu 22.04 | 4 vCPU | 8 GB | 100 GB |  containers |
 | `immich01` | Container | Ubuntu 22.04 | 4 vCPU | 6 GB | 20+2TB | Photo storage |
 | `pihole01` | Container | Debian | 1 vCPU | 512 MB | 2 GB | DNS filtering |
-| `Netdata ` | Container | Debian | 2 vCPU | 1 GB | 10 GB | 🧭TBD🧭|
-| `BitWarden` | Container | Debian | 2 vCPU | 2 GB | 20 GB | 🧭TBD🧭 |
-| `Syncthing` | Container | Debian | ? vCPU | ? GB | ?? GB | 🧭TBD🧭 |
-| `Portainer` | Container | Debian | ? vCPU | ? GB | ?? GB | 🧭TBD🧭 |
-| `Tailscale` | Container | Debian | ? vCPU | ? GB | ?? GB | 🧭TBD🧭 |
-| `Nextcloud` | Container | Debian | ? vCPU | ? GB | ?? GB | 🧭TBD🧭 |
-| `Jellyfin` | Container | Debian | ? vCPU | ? GB | ?? GB | 🧭TBD🧭 |
-
+| `Nextcloud` | Container | Debian | ? vCPU | ? GB | ?? GB | 2026 |
+| `Jellyfin` | Container | Debian | ? vCPU | ? GB | ?? GB | 2026 |
+| `docker01` | VM | Ubuntu 22.04 | 4 vCPU | 8 GB | 100 GB |  2026 |
 
 
 ## Repository Structure
