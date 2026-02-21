@@ -31,7 +31,7 @@ As the system grew, I transitioned fully to Linux for stability and scalability,
 | Hostname | Type | OS | CPU | RAM | Disk | Comment |
 |-----------|------|----|-----|-----|------|------------|
 | `proxmox01` | Hypervisor | Proxmox VE 8.x | i9-9900K | 64 GB | 2 TB SSD | Mainserver |
-| `truenas01` | NAS / files | TrueNAS SCALE | 4 vCPU | 16 GB | 2x8TB, 2x2TB ZFS | SMB, NFS, Backups |
+| `truenas01` | NAS / files | TrueNAS SCALE | 4 vCPU | 16 GB | 4x8TB, 2x2TB ZFS | SMB, NFS, Backups |
 | `immich01` | Container | Ubuntu 22.04 | 4 vCPU | 6 GB | 20+2TB | Photo storage |
 | `pihole01` | Container | Debian | 1 vCPU | 512 MB | 2 GB | DNS filtering |
 | `Nextcloud` | Container | Debian | ? vCPU | ? GB | ?? GB | 2026 |
