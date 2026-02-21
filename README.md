@@ -77,7 +77,9 @@ These remain possible extensions for future iterations.
 
 
 A detailed project report can be found here:  
-👉 [PROJECT_REPORT.md](./PROJECT_REPORT.md)
+[PROJECT_REPORT.md](docs/project-report.md)
 
+Timeline changes can be found here:
 
+[Timeline](docs/timeline)
 
