@@ -79,8 +79,5 @@ These remain possible extensions for future iterations.
 A detailed project report can be found here:  
 👉 [PROJECT_REPORT.md](./PROJECT_REPORT.md)
 
-## ohh, and 
-I bought this little thing to try networking or perhaps as offsite backup. Anything can happen. 
-![EliteDesk](images/Elitedeskg5.jpeg)
 
 
