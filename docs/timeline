@@ -92,11 +92,58 @@ Tested **Tailscale** as a potential solution, but its peer-to-peer access model 
 
 ---
 
-## 26.10.25 – HP EliteDesk g5
-- 
-**Result:** 
-**Learning:** 
+## 26.10.25 - HP EliteDesk G5 (Secondary Node / Backup Infrastructure)
+
+**Goal:**  
+Deploy a secondary low-power node to separate backup workloads from the primary Proxmox host and improve redundancy in the homelab environment.
+
+**Actions:**  
+- Deployed HP EliteDesk G5 as dedicated infrastructure node.
+- Installed Proxmox Backup Server (PBS) for centralized VM backup handling.
+- Configured datastore for VM backup storage.
+- Connected node to core network with static IP configuration.
+- Verified backup job connectivity from primary Proxmox host.
+- Tested snapshot-based backups and restore validation.
+- Segregated backup workload from main compute/storage host (TrueNAS VM).
+
+**Result:**  
+Dedicated backup node operational with isolated backup workload handling. VM snapshots and scheduled backups stored independently from primary NAS storage.
+
+**Learning:**  
+- Separating backup infrastructure reduces risk in single-node homelab environments.
+- Proxmox Backup Server provides efficient incremental backups via deduplication.
+- Backup verification (restore testing) is critical—successful backup ≠ guaranteed recovery.
+- Infrastructure layering (Compute vs Storage vs Backup node) improves architectural clarity and resilience.
+
+---
+
+## 21.02.26 - ZFS Pool Redesign and HBA Migration
+
+**Goal:**  
+Redesign storage architecture from a 2×8TB ZFS mirror to a 4×8TB RAIDZ1 configuration for improved storage density and scalability.
+
+**Actions:**  
+- Physically installed LSI SAS2308 HBA (IT-mode) for expanded SATA connectivity.
+- Migrated all 8TB drives from motherboard SATA to HBA controller.
+- Verified disk health using SMART (`smartctl -a`) before reconfiguration.
+- Confirmed stable disk mapping via `/dev/disk/by-id` passthrough in Proxmox.
+- Detached legacy `pool1` after ensuring dependent services were migrated.
+- Created new ZFS pool `tank` using 4×8TB RAIDZ1 (~21.8 TiB usable).
+- Preserved separate pools:
+  - `immich` (2×2TB mirror)
+  - `pool_3tb` (single-disk workdrive)
+- Validated pool integrity with `zpool status` and scrub verification.
+- Rebuilt dataset structure and prepared network share layout.
+
+**Result:**  
+Stable 4×8TB RAIDZ1 pool operational in TrueNAS VM with raw disk passthrough via Proxmox. All disks online and verified healthy.
+
+**Learning:**  
+- RAIDZ1 provides significantly better storage efficiency compared to mirrors but increases resilver duration on large disks.
+- Using `/dev/disk/by-id` prevents device reordering issues after reboot.
+- ZFS pool deletion requires detaching system datasets and active SMB dependencies first.
+- Physical disk migration requires both hardware verification and logical validation inside the hypervisor layer.
 
 
-
+---
 
