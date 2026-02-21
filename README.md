@@ -22,7 +22,7 @@ As the system grew, I transitioned fully to Linux for stability and scalability,
 **Hardware:** 
 - CPU: i9-9900K, 
 - RAM: 64GB 
-- Disks: 2×8TB HDD (NAS), 2×2TB HDD (photo backup), 250GB SSD (OS/VM)
+- Disks: 4×8TB HDD (NAS), 2×2TB HDD (photo backup), 250GB SSD (OS/VM)
 - GPU: Nvidia 1070TI
 - PSU: Corsair 750W
   
