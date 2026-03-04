@@ -3,6 +3,17 @@
 ## Overview
 This project implements reliable single-node NAS environment inside a Proxmox homelab. The goal was to design a storage backbone that’s fault-tolerant, simple to maintain, and scalable for self-hosted services like Immich and Jellyfin. The setup emphasizes practical automation, data safety, and reproducible documentation.
 
+## Tech Stack
+- Hypervisor: Proxmox VE
+- Storage: ZFS
+- NAS: TrueNAS SCALE
+- Networking: TP-Link Omada
+- DNS: Pi-hole
+- Backup: Proxmox Backup Server
+- VPN: Tailscale
+- Containers: Docker
+- Monitoring: Uptime Kuma
+
 ## Purpose 
 This project series began as a way to repurpose my old hardware into something practical, a NAS and game server environment for me, friends and my fellow students.
 Along the way, I discovered Proxmox and the benefits of virtualization, which opened the door to building a more flexible and efficient setup than a standard Windows-based host.
