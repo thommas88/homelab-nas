@@ -29,6 +29,13 @@ As the system grew, I transitioned fully to Linux for stability and scalability,
 ## UML
 ![Architecture diagram](images/UML2.png)
 
+
+## Screenshots
+![proxmox](images/Proxmox-summary.png)
+![ZFS poolgram](images/ZFS-pools.png)
+![truenas](images/SMB.png)
+
+
 ## Architecture
 **Hardware:** 
 - CPU: i9-9900K, 
