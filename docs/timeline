@@ -147,3 +147,36 @@ Stable 4×8TB RAIDZ1 pool operational in TrueNAS VM with raw disk passthrough vi
 
 ---
 
+
+## 28.02.26 – ThinkCentre M900 (Offsite Monitor Node med Tailscale + Uptime Kuma)
+
+**Goal:**  
+Deploy a dedicated low-maintenance monitoring node at a separate location (“Adresse 2”) to verify real-world availability of the homelab without port-forwarding or subscriptions.
+
+**Actions:**  
+- Configured BIOS for resilience:  
+  - **AC Power Recovery: ON** (auto-boot after power loss)  
+  - **Wake-on-LAN: Enabled** (optional remote wake)  
+  - **Deep Sleep: Disabled** (prevent unexpected low-power states)  
+- Installed **Debian 12 (minimal)**, enabling only **SSH** during setup.  
+- Updated system packages and installed **Docker** + **Docker Compose** for lightweight service deployment.  
+- Deployed **Uptime Kuma** via Docker Compose (`/opt/uptime-kuma`) with persistent data volume.  
+- Installed and authenticated **Tailscale** to connect the node to the tailnet (no port-forwarding).  
+- Verified resilience:  
+  - Docker enabled on boot and confirmed active after reboot.  
+  - Uptime Kuma restart policy validated and confirmed healthy after reboot.  
+  - Tailscale auto-reconnected and retained its 100.x IP after reboot.  
+- Expanded monitoring scope by installing **Tailscale on the Proxmox host** and monitoring Proxmox via HTTPS (port 8006) over the tailnet.  
+- Tuned monitors and alerts (60s interval, retries, Discord notifications) to reduce false positives and avoid notification spam.  
+- Increased history retention to support longer-term uptime tracking (e.g., 365 days).
+
+**Result:**  
+A stable offsite monitoring node that survives reboots/power events and can reach internal services over Tailscale. Provides independent “outside the network” verification of uptime for Proxmox and key VMs.
+
+**Learning:**  
+- Minimal OS + Docker + Tailscale is a robust pattern for “set-and-forget” infrastructure monitoring.  
+- BIOS resilience settings matter as much as software when the node is offsite and unattended.  
+- Alert tuning is crucial: fewer, higher-quality alerts are more useful than frequent spam.
+
+
+
