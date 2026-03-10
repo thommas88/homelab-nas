@@ -179,4 +179,58 @@ A stable offsite monitoring node that survives reboots/power events and can reac
 - Alert tuning is crucial: fewer, higher-quality alerts are more useful than frequent spam.
 
 
+---
+
+
+## 10.03.26 - Immich Rebuild on Debian VM with TrueNAS NFS Storage
+
+**Goal:**  
+Rebuild Immich into a cleaner and more robust architecture where the application runs in its own VM, the database stays local to the VM, and photo/video storage is moved off the VM disk onto dedicated TrueNAS-backed mirrored storage.
+
+**Actions:**  
+- Created a fresh **Debian 12 VM** in Proxmox for Immich with **4 vCPU, 8 GB RAM, and 80 GB disk**.  
+- Installed a minimal Debian system with **SSH only**, then added **Docker Engine**, **Docker Compose**, and **qemu-guest-agent**.  
+- Deployed Immich under **`/opt/immich`** using Docker Compose and configured the upload path to **`/srv/immich`**.  
+- Confirmed the initial Immich deployment worked, then paused before real use after identifying that media would otherwise be stored on the VM disk.  
+- Investigated the old 2×2 TB Immich disks in TrueNAS and found stale metadata from a previous exported/faulted ZFS pool.  
+- Verified that only the two 2 TB disks were targeted and cleared their labels/signatures without touching the other pools.  
+- Created a brand-new TrueNAS mirror pool **`immichpool`** and dataset **`immich-data`** for clean Immich storage.  
+- Configured a new **NFS share** for **`/mnt/immichpool/immich-data`** and mounted it inside the Immich VM at **`/srv/immich`**.  
+- Troubleshot multiple NFS issues, including:  
+  - incorrect TrueNAS target IP during mount attempts  
+  - missing network access rules on the NFS share  
+  - `root_squash` preventing Immich from writing required marker files  
+  - missing writable `.immich` integrity files in storage subfolders  
+- Fixed final permission issues by setting ownership to **UID/GID 1000:1000** on the dataset and changing the NFS export to **`no_root_squash`**.  
+- Made the NFS mount persistent through **`/etc/fstab`** and validated it after reboot.  
+- Verified end-to-end functionality with:
+  - successful Immich startup  
+  - successful web access  
+  - successful test upload  
+  - files appearing under **`/srv/immich/upload`**  
+  - all containers reaching **healthy** state after reboot
+
+**Result:**  
+Immich is now running successfully in a dedicated Debian VM with **local database storage** and **media stored on a TrueNAS-backed mirrored NFS share**. The setup survives reboot, passes upload testing, and no longer relies on the VM disk for photo/video storage.
+
+**Learning:**  
+- Separating **application/database storage** from **bulk media storage** is a much safer Immich design in a homelab.  
+- Reused ZFS disks can leave behind misleading pool metadata, so validation via CLI is essential before rebuilding storage.  
+- NFS troubleshooting should always verify the basics first: **correct IP, export state, network access, and squash behavior**.  
+- Immich is strict about storage integrity and may fail startup if its expected `.immich` marker files are missing or not writable.  
+- A deployment is not really complete until it passes:  
+  - mount validation  
+  - upload validation  
+  - reboot validation  
+  - container health validation
+
+
+---
+
+
+
+
+
+
+
 
