@@ -228,7 +228,46 @@ Immich is now running successfully in a dedicated Debian VM with **local databas
 ---
 
 
+## 11.03.26 - Omada Controller Deployment and Device Adoption
 
+**Goal:**  
+Deploy a centralized Omada management platform to simplify future VLAN setup, improve visibility across network devices, and move from standalone device management to a more structured controller-based network design.
+
+**Actions:**  
+- Evaluated **VM vs container** for Omada Controller and selected a **dedicated Debian 12 VM** in Proxmox for better isolation, simpler backups, and easier troubleshooting.  
+- Created the VM with a lightweight server profile:  
+  - **2 vCPU**  
+  - **4 GB RAM**  
+  - **30 GB disk**  
+  - **VirtIO networking on vmbr0**  
+- Installed **Debian 12 minimal** without a desktop environment.  
+- Configured the VM hostname as **`omada`** for short and practical SSH / terminal access.  
+- Reserved a **static DHCP lease** on the router to give the controller a consistent management IP.  
+- Installed and verified:  
+  - **qemu-guest-agent**  
+  - **OpenJDK 17**  
+  - **JSVC**  
+  - **MongoDB 8**  
+- Downloaded and installed **Omada Network Application v6.1.0.19** on the Debian VM.  
+- Verified successful access to the Omada web interface over HTTPS from the local network.  
+- Completed the initial Omada setup wizard with:
+  - local controller account
+  - cloud access disabled
+  - site name set to **`homelab`**
+  - application scenario set to **Home**
+- Attempted adoption of the existing **ER605 v2.20 gateway** and **SG3210X-M2 v1.0 switch**.  
+- Resolved initial **Adopt Failed** state by retrying adoption with the devices’ existing standalone credentials.  
+- Successfully adopted both devices into the controller and verified that both now show **Connected** in the Omada device list.
+
+**Result:**  
+A fully operational **Omada Controller VM** is now running in Proxmox, with both the **ER605 gateway** and **SG3210X-M2 switch** centrally managed through the controller. The network core has been moved from standalone configuration to controller-based management without disrupting connectivity.
+
+**Learning:**  
+- A dedicated VM is a clean and robust way to host Omada Controller in a homelab environment.  
+- Minimal Debian with only required dependencies provides a lean and maintainable platform.  
+- Existing Omada devices may fail adoption initially if the controller is not given the devices’ current standalone credentials.  
+- Adopting the **switch first** was a safer and more controlled approach before attempting gateway adoption.  
+- Centralized management is now in place, creating a much better foundation for future **VLAN design**, **port profiles**, and network segmentation.
 
 
 
