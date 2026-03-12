@@ -270,6 +270,38 @@ A fully operational **Omada Controller VM** is now running in Proxmox, with both
 - Centralized management is now in place, creating a much better foundation for future **VLAN design**, **port profiles**, and network segmentation.
 
 
+---
+
+
+## 12.03.26 - Home Assistant VM Deployment and Zigbee Integration
+
+**Goal:**  
+Deploy a dedicated Home Assistant VM in Proxmox and establish a stable Zigbee stack for future smart home integration in the homelab.
+
+**Actions:**  
+- Created a dedicated **Home Assistant OS VM** on the primary Proxmox host.  
+- Configured the VM with **q35**, **OVMF (UEFI)**, **2 vCPU**, **4 GB RAM**, and **32 GB disk**.  
+- Imported the official **Home Assistant OS qcow2** image instead of using a traditional ISO installer.  
+- Resolved UEFI boot issues by disabling pre-enrolled Secure Boot keys on the EFI disk.  
+- Assigned the VM a **DHCP reservation** to keep a stable IP address (`192.168.0.105`).  
+- Created an initial Proxmox backup after successful deployment.  
+- Attached the **Sonoff Zigbee 3.0 USB Dongle Plus V2** using **USB passthrough**.  
+- Installed and configured **Mosquitto broker** and **Zigbee2MQTT**.  
+- Configured Zigbee2MQTT with a stable `/dev/serial/by-id/...` path, **ember** adapter, and MQTT connection through `mqtt://core-mosquitto:1883`.  
+- Verified Zigbee functionality by pairing the first device, an **IKEA STARKVIND air purifier**, and exposing it to Home Assistant via MQTT discovery.
+
+**Result:**  
+Home Assistant is now running as a dedicated VM in Proxmox with a working Zigbee stack based on Sonoff + Zigbee2MQTT. MQTT integration is functional, and the first Zigbee device has been successfully onboarded and exposed inside Home Assistant.
+
+**Learning:**  
+- A dedicated **VM** is more robust than CT/LXC for Home Assistant when USB passthrough and appliance-style management are required.  
+- Importing the official Home Assistant disk image is cleaner than using a standard ISO workflow.  
+- UEFI/Secure Boot settings in Proxmox can prevent boot until configured correctly.  
+- Using `/dev/serial/by-id/...` is more reliable than `/dev/ttyUSB0` for persistent Zigbee adapter mapping.  
+- Zigbee2MQTT provides a flexible foundation for mixed-vendor Zigbee devices such as IKEA and Philips Hue without relying on separate bridges.
+
+---
+
 
 
 
