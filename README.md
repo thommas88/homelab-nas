@@ -50,8 +50,10 @@ As the system grew, I transitioned fully to Linux for stability and scalability,
 |-----------|------|----|-----|-----|------|------------|
 | `proxmox01` | Hypervisor | Proxmox VE 8.x | i9-9900K | 64 GB | 2 TB SSD | Mainserver |
 | `truenas01` | NAS / files | TrueNAS SCALE | 4 vCPU | 16 GB | 4x8TB, 2x2TB ZFS | SMB, NFS, Backups |
-| `immich01` | Container | Ubuntu 22.04 | 4 vCPU | 6 GB | 20+2TB | Photo storage |
-| `pihole01` | Container | Debian | 1 vCPU | 512 MB | 2 GB | DNS filtering |
+| `immich01` | VM | Ubuntu 22.04 | 4 vCPU | 8 GB | 20+2TB | Photo storage |
+| `pihole01` | Container | Debian | 1 vCPU | 256 MB | 2 GB | DNS filtering |
+| `Omada Controller` | VM | Debian | 2 vCPU | 4 GB | 30 GB | Network controller |
+| `Home Assistant` | VM | Home Assistant OS | 2 vCPU | 4 GB | 32 GB | Device manager |
 | `Nextcloud` | Container | Debian | ? vCPU | ? GB | ?? GB | 2026 |
 | `Jellyfin` | Container | Debian | ? vCPU | ? GB | ?? GB | 2026 |
 | `docker01` | VM | Ubuntu 22.04 | 4 vCPU | 8 GB | 100 GB |  2026 |
