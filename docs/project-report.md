@@ -4,13 +4,13 @@
 
 **Host Server (Proxmox VE)**
 - CPU: Intel i9-9900K
-- RAM: 32 GB DDR4
+- RAM: 64 GB DDR4
 - Boot Drive: 1 × 500 GB SSD (Proxmox OS)
 - Storage Drives:
-  - 2 × 8 TB HDD (ZFS mirror for NAS storage)
+  - 4 × 8 TB HDD (ZFS mirror for NAS storage)
   - 2 × 2 TB HDD (reserved for testing or secondary pool)
 - GPU: NVIDIA GTX 1070 Ti (not used for this project, possible for Jellyfin hardware transcoding later)
-- Network: 1 Gbit/s LAN
+- Network: 2.5 Gbit/s LAN
 
 **Virtual Machines**
 - **TrueNAS SCALE VM**
@@ -26,9 +26,6 @@
 - Proxmox VE 8.x
 - TrueNAS SCALE 24.x
 - Windows 11 Pro (for test-VM)
-
-> The two 2 TB HDDs are currently reserved for additional testing (e.g., creating a secondary pool or acting as a backup target).  
-> Power/UPS has been considered, and might be added later.
 
 ---
 
@@ -61,15 +58,15 @@ I decided to run **TrueNAS SCALE as a VM in Proxmox** with raw-disk passthrough.
 
 ### Proxmox Installation
 - Installed Proxmox on a dedicated system SSD  
-- Left the two 8 TB HDDs untouched so they could be passed raw into TrueNAS  
+- Left the four 8 TB HDDs untouched so they could be passed raw into TrueNAS  
 
 ### TrueNAS VM
-- Created VM with 8 GB RAM, CPU type `host`, VirtIO NIC  
+- Created VM with 16 GB RAM, CPU type `host`, VirtIO NIC  
 - Disks added via passthrough using `/dev/disk/by-id/...`  
 
 ### ZFS Pool
-- Created ZFS pool `tank` in TrueNAS as a mirror (RAID1) of the two 8 TB disks  
-- Result: 8 TB usable capacity with redundancy  
+- Created ZFS pool `tank` in TrueNAS as a mirror (RAID1) of the four 8 TB disks  
+- Result: 24 TB usable capacity with redundancy  
 
 ### Network Sharing
 - Configured SMB shares for access from Windows  
@@ -131,7 +128,7 @@ By including these considerations, the project shows awareness of best practices
 ### Features
 | Feature                        | Status   |
 |--------------------------------|----------|
-| 8 TB redundant ZFS mirror      | ✅ Active |
+| 24 TB redundant ZFS mirror      | ✅ Active |
 | SMB/NFS access for PCs & VMs   | ✅ Active |
 | Automatic photo backup (Immich)| ✅ Active |
 | Media streaming (Jellyfin)     | 🔄 Planned |
