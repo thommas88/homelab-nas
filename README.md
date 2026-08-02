@@ -27,7 +27,7 @@ As the system grew, I transitioned fully to Linux for stability and scalability,
 - Serve as a stable foundation for additional services (e.g. Immich, Jellyfin) 
 
 ## UML
-![Architecture diagram](images/IML4.png)
+![Architecture diagram](images/UML4.png)
 
 
 ## Screenshots
