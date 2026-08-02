@@ -40,7 +40,7 @@ As the system grew, I transitioned fully to Linux for stability and scalability,
 **Hardware:** 
 - CPU: i9-9900K, 
 - RAM: 64GB 
-- Disks: 4×8TB HDD (NAS), 2×2TB HDD (photo backup), 250GB SSD (OS/VM)
+- Disks: 4×8TB HDD (NAS), 2×2TB HDD (photo backup),3TB hdd (workdrive), 250GB SSD (OS/VM)
 - GPU: Nvidia 1070TI
 - PSU: Corsair 750W
   
@@ -50,7 +50,7 @@ As the system grew, I transitioned fully to Linux for stability and scalability,
 |-----------|------|----|-----|-----|------|------------|
 | `proxmox01` | Hypervisor | Proxmox VE 8.x | i9-9900K | 64 GB | 2 TB SSD | Mainserver |
 | `truenas01` | NAS / files | TrueNAS SCALE | 4 vCPU | 16 GB | 4x8TB, 2x2TB ZFS | SMB, NFS, Backups |
-| `immich01` | VM | Ubuntu 22.04 | 4 vCPU | 8 GB | 20+2TB | Photo storage |
+| `immich01` | VM | Ubuntu 22.04 | 4 vCPU | 8 GB | 2TB | Photo storage |
 | `pihole01` | Container | Debian | 1 vCPU | 256 MB | 2 GB | DNS filtering |
 | `Omada Controller` | VM | Debian | 2 vCPU | 4 GB | 30 GB | Network controller |
 | `Home Assistant` | VM | Home Assistant OS | 2 vCPU | 4 GB | 32 GB | Device manager |
