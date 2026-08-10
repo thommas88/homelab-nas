@@ -787,10 +787,68 @@ The final VM and service placement will be documented after the new NVMe drive i
 * Separating planning from execution reduces the chance of introducing several simultaneous failures.
 * Assigning each hypervisor a defined infrastructure role simplifies capacity planning, security segmentation, maintenance, and troubleshooting.
 
+---
 
+## 08.08.26 - VLAN Hardening, ACL Validation, and ES216G Recovery
 
+**Goal:**  
+Complete the VLAN migration by replacing the temporary permissive network state with explicit inter-VLAN access control, restricting the legacy default network, and validating the final segmented architecture.
 
+**Actions:**
 
+* Reviewed the completed VLAN migration and confirmed that normal clients and infrastructure services had been moved away from the legacy `DEFAULT` network.
+* Disabled DHCP on `DEFAULT` to prevent devices from unintentionally falling back to the old flat network.
+* Finalized the security model around the existing VLAN structure:
 
+  | VLAN | Name | Role |
+  | ---: | --- | --- |
+  | 1 | DEFAULT | Restricted legacy / gateway-management network |
+  | 10 | INFRA | Hypervisors, servers, and network infrastructure |
+  | 20 | TRUSTED | Administrative and trusted personal devices |
+  | 25 | GAME-DMZ | Externally reachable game-server workloads |
+  | 30 | IOT | Smart-home and lower-trust consumer devices |
+  | 40 | GUEST | Isolated guest access |
 
+* Replaced temporary broad firewall permissions with ordered **Gateway ACLs** using a least-privilege model.
+* Configured explicit DNS exceptions so isolated networks could reach the two Pi-hole servers without receiving unrestricted access to the infrastructure VLAN.
+* Established `TRUSTED` as the primary administrative network with access to infrastructure, game-server, and IoT systems where required.
+* Restricted reverse communication so infrastructure systems could not freely initiate connections toward trusted clients.
+* Created a dedicated exception allowing **Home Assistant → IOT** communication while keeping general `INFRA → IOT` traffic blocked.
+* Isolated `GAME-DMZ` from the private infrastructure while preserving:
+  * Internet access
+  * Pi-hole DNS
+  * Playit.gg connectivity
+  * administrative access originating from `TRUSTED`
+* Isolated the `GUEST` network from internal systems while preserving Internet and DNS access.
+* Function-tested the resulting policy in both directions, confirming that required traffic was allowed and prohibited traffic was actually blocked.
+
+During the hardening work, a configuration change on the uplink between the **SG3210X-M2** core switch and **ES216G** access switch interrupted the ES216G management path to Omada Controller.
+
+* Diagnosed the resulting `Adopt Failed` condition as a management-VLAN/uplink problem rather than a controller failure.
+* Regained local access to the ES216G.
+* Restored its management configuration on `INFRA`.
+* Verified that the infrastructure VLAN was correctly transported across the inter-switch trunk.
+* Restored connectivity between the ES216G and Omada Controller.
+* Successfully re-adopted the switch and returned it to `CONNECTED` state.
+* Revalidated downstream devices, VLAN assignments, DNS, Internet access, and inter-VLAN ACL behavior after recovery.
+* Disabled all unused switch ports and documented the final port, trunk, VLAN, and management configuration.
+
+**Result:**  
+The VLAN migration progressed from basic logical separation to a fully enforced segmentation model. Infrastructure, trusted clients, game servers, IoT devices, and guests now operate in separate trust zones with explicit Gateway ACL rules controlling communication between them.
+
+The legacy `DEFAULT` network is restricted rather than being available as an unrestricted fallback, both Pi-hole instances remain reachable through controlled DNS exceptions, and administrative access is centralized through `TRUSTED`.
+
+The ES216G management incident was fully recovered without redesigning the network, and the final working topology, ACL policy, IP plan, port mapping, and recovery procedure were documented for future maintenance.
+
+**Learning:**
+
+* VLAN creation alone does not provide meaningful security; segmentation only becomes effective when routed traffic between zones is explicitly controlled.
+* Least-privilege ACL design works best when narrow permit exceptions are placed before broader deny rules.
+* Administrative access does not need to be symmetric: trusted clients can manage infrastructure without allowing infrastructure systems unrestricted access back to trusted endpoints.
+* Management VLANs and inter-switch trunks are critical dependencies and should be changed one variable at a time with a documented rollback path.
+* An Omada `Adopt Failed` state can be a symptom of broken network transport rather than a problem with the controller or adoption mechanism itself.
+* Testing must verify both sides of the policy: required traffic must work, but traffic intended to be isolated must also be actively tested and confirmed blocked.
+* Incident documentation is valuable when it captures not only the fix, but also the root cause, failed assumptions, recovery procedure, and preventive actions.
+
+---
 
